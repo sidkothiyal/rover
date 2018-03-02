@@ -1,6 +1,5 @@
 import numpy as np
 import math, sys
-import dynamic_prog
 import matplotlib.pyplot as plt
 
 #orientation = [[135, 90, 45],
@@ -11,6 +10,21 @@ import matplotlib.pyplot as plt
 orientation = [[225, 270, 315],
 		[180, 0, 0],
 		[135, 90, 45]]
+
+def dynamic_path_finder(maps, goal=None, route=None):
+	if goal is None:
+		goal = (0, len(maps[0])-1)
+	if route is None:
+		route = np.full_like(maps, 9999)
+		route[goal[0]][goal[1]] = 0
+	
+	for i in range(-1, 2):
+		for j in range(-1, 2):
+			if goal[0] + i >= 0 and goal[0] + i < len(maps) and goal[1] + j >= 0 and goal[1] + j < len(maps[0]):
+				if route[goal[0]+i][goal[1]+j] > route[goal[0]][goal[1]] + 1 and maps[goal[0]+i][goal[1]+j] != 1:
+					route[goal[0]+i][goal[1]+j] = route[goal[0]][goal[1]] + 1
+					route = dynamic_path_finder(maps, (goal[0] + i, goal[1] + j), route)
+	return route
 
 def dist_to_goal(Rover, goal):
 	x, y = Rover.pos
@@ -64,7 +78,7 @@ def decision_step(Rover):
     	if Rover.route_map is None or Rover.route_map[y][x] == 9999:
     		way_map = world_to_obs(Rover.worldmap)
     		#np.savetxt("test2.txt", way_map, fmt='%d')
-    		Rover.route_map = dynamic_prog.dynamic_path_finder(way_map, goal=(int(Rover.initial_pos[1]), int(Rover.initial_pos[0])))
+    		Rover.route_map = dynamic_path_finder(way_map, goal=(int(Rover.initial_pos[1]), int(Rover.initial_pos[0])))
     		#np.savetxt("test.txt", Rover.route_map, fmt='%4d')
     		#for x in range(len(Rover.worldmap)):
     		#	for y in range(len(Rover.worldmap[x])):
