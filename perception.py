@@ -206,8 +206,8 @@ def perception_step(Rover):
     #print(ox_pix_world)
     #print(x_pix_world)
     #print(rx_pix_world)
-    Rover.rock_angles = []
-    Rover.rock_dists = []
+    Rover.rock_angles = rangles
+    Rover.rock_dists = rdist
     
     for i in range(len(ox_pix_world)):
         if odist[i] < 150:
@@ -215,8 +215,8 @@ def perception_step(Rover):
             
     for i in range(len(rx_pix_world)):
         if rdist[i] < 70:
-            Rover.rock_angles.append(rangles[i])
-            Rover.rock_dists.append(rdist[i])
+            #Rover.rock_angles.append(rangles[i])
+            #Rover.rock_dists.append(rdist[i])
             Rover.worldmap[ry_pix_world[i], rx_pix_world[i], 1] += 10
             #Rover.samples_located += 1
             '''
